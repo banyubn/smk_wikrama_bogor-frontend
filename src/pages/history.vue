@@ -15,7 +15,11 @@
         <tr v-for="order in orders">
           <td>{{ order.id }}</td>
           <td>Rp.{{ order.total_amount.toLocaleString("ID-id") }}</td>
-          <td>{{ order.status }}</td>
+          <td>
+            <v-chip :color="order.status == 'COMPLETED' ? 'purple' : 'yellow-darken-3'">
+              {{ order.status }}
+            </v-chip>
+          </td>
         </tr>
       </tbody>
     </v-table>

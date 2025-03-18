@@ -9,7 +9,7 @@
       </v-btn>
     </template>
   </v-snackbar>
-  <v-container max-width="960px" style="margin-bottom: 70px;">
+  <v-container max-width="960px" style="margin-bottom: 70px">
     <div class="w-100 pa-12 background-banner rounded-xl mb-12">
       <v-row>
         <v-col sm="12" md="6">
@@ -18,6 +18,7 @@
           </p>
           <p class="text-body-2 my-2 text-white">#makanankhasbogor</p>
           <v-text-field
+            v-model="searchQuery"
             prepend-inner-icon="mdi-magnify"
             class="mt-6"
             rounded="pill"
@@ -33,7 +34,7 @@
       Makanan Lezat Khas <span class="text-purple">Bogor</span>
     </p>
     <v-row>
-      <v-col sm="12" md="6" v-for="product in products">
+      <v-col sm="12" md="6" v-for="product in filteredProduct">
         <v-card elevation="0">
           <v-img
             class="rounded-lg"
@@ -53,7 +54,7 @@
               {{ product.price.toLocaleString("ID-id") }}
             </p>
           </div>
-          <v-divider class="my-2"> </v-divider>
+          <v-divider class="my-3"> </v-divider>
           <v-btn
             v-if="!checkProduct(product.id)"
             @click="addProduct(product.id)"
@@ -67,7 +68,7 @@
             <v-btn
               variant="outlined"
               rounded="xl"
-              color="yellow"
+              color="yellow-darken-2"
               class="text-h5"
               @click="minProduct(product.id)"
               >-</v-btn
@@ -99,6 +100,7 @@
       </v-card>
     </v-slide-y-reverse-transition>
   </v-container>
+  <Footer />
 </template>
 
 <script>
@@ -108,6 +110,7 @@ import axios from "axios";
 export default {
   data() {
     return {
+      searchQuery: "",
       snackbar: false,
       snackbarText: "",
       loading: false,
@@ -217,6 +220,18 @@ export default {
 
         this.cart.push(data);
       }
+    },
+  },
+  computed: {
+    // Get product (searchable)
+    filteredProduct() {
+      if (this.searchQuery.length > 0) {
+        return this.products.filter((item) =>
+          item.name.toLowerCase().includes(this.searchQuery)
+        );
+      }
+
+      return this.products;
     },
   },
   mounted() {
