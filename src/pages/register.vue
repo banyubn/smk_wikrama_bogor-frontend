@@ -1,6 +1,14 @@
 <template>
-  <!-- <v-text-field>
-    </v-text-field> -->
+  <v-snackbar v-model="snackbar" color="purple" timeout="3000">
+    {{ snackbarText }}
+
+    <template v-slot:actions>
+      <v-btn color="white" variant="text" @click="snackbar = false">
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
+
   <v-row class="h-100">
     <v-col md="4" class="bg-purple d-flex">
       <v-img class="mx-4" src="/src/assets/authentication_vector.png"> </v-img>
@@ -50,7 +58,7 @@
           v-on:click:append-inner="showPassword = !showPassword"
         >
         </v-text-field>
-        <div class="d-flex justify-space-between align-center">
+        <div class="d-flex justify-space-between align-center flex-wrap">
           <v-btn :loading="loading" type="submit" color="purple">Daftar</v-btn>
           <v-btn
             :loading="loading"
@@ -72,6 +80,8 @@ import axios from "axios";
 export default {
   data() {
     return {
+      snackbar: false,
+      snackbarText: "",
       showPassword: false,
       loading: false,
       name: "",
@@ -83,10 +93,6 @@ export default {
   methods: {
     // Submits register form
     async submit() {
-      const validate = this.$refs.form.validate();
-      if (validate) {
-        return;
-      }
       this.loading = true;
       try {
         const payload = {
@@ -109,6 +115,21 @@ export default {
           this.$router.push({ path: "/manage-products" });
         }
       } catch (error) {
+        if (error.status == 422) {
+          this.snackbarText = "Tolong lengkapi formnya dulu!";
+
+          setTimeout(function () {
+            this.snackbarText = "";
+          }, 5000);
+        } else {
+          this.snackbarText = "Terjadi kesaslahan!";
+        }
+
+        setTimeout(function () {
+          this.snackbarText = "";
+        }, 5000);
+
+        this.snackbar = true;
       } finally {
         this.loading = false;
       }

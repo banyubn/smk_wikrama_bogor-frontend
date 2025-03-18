@@ -1,6 +1,14 @@
 <template>
-  <!-- <v-text-field>
-  </v-text-field> -->
+  <v-snackbar v-model="snackbar" color="purple" timeout="3000">
+    {{ snackbarText }}
+
+    <template v-slot:actions>
+      <v-btn color="white" variant="text" @click="snackbar = false">
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
+
   <v-row class="h-100">
     <v-col md="4" class="bg-purple d-flex">
       <v-img class="mx-4" src="/src/assets/authentication_vector.png"> </v-img>
@@ -11,7 +19,7 @@
         <span class="font-weight-bold"> Yuk </span>
       </p>
       <p class="text-h4 font-weight-bold mb-6">Masuk untuk memulai!</p>
-      <v-form @submit.prevent="submit">
+      <v-form @submit.prevent="submit" ref="form">
         <v-text-field
           :rules="[() => !!email || 'This field is required']"
           :loading="loading"
@@ -33,7 +41,7 @@
           v-on:click:append-inner="showPassword = !showPassword"
         >
         </v-text-field>
-        <div class="d-flex justify-space-between">
+        <div class="d-flex justify-space-between flex-wrap">
           <v-btn :loading="loading" type="submit" color="purple">Masuk</v-btn>
           <v-btn
             variant="plain"
@@ -54,6 +62,8 @@ import axios from "axios";
 export default {
   data() {
     return {
+      snackbar: false,
+      snackbarText: "",
       showPassword: false,
       loading: false,
       email: "",
@@ -63,10 +73,7 @@ export default {
   methods: {
     // Submits login form
     async submit() {
-      const validate = this.$refs.form.validate();
-      if (validate) {
-        return;
-      }
+      this.$refs.form.validate();
       this.loading = true;
       try {
         const payload = {
@@ -87,6 +94,23 @@ export default {
           this.$router.push({ path: "/manage-products" });
         }
       } catch (error) {
+        if (error.status == 422) {
+          this.snackbarText = "Tolong lengkapi formnya dulu!";
+
+          setTimeout(function () {
+            this.snackbarText = "";
+          }, 5000);
+        }
+
+        if (error.status == 401) {
+          this.snackbarText = "Email atau password salah!";
+
+          setTimeout(function () {
+            this.snackbarText = "";
+          }, 5000);
+        }
+        
+        this.snackbar = true;
       } finally {
         this.loading = false;
       }

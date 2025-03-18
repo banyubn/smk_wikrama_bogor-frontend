@@ -1,6 +1,15 @@
 <template>
   <Navbar />
-  <v-container max-width="960px">
+  <v-snackbar v-model="snackbar" color="purple" timeout="3000">
+    {{ snackbarText }}
+
+    <template v-slot:actions>
+      <v-btn color="white" variant="text" @click="snackbar = false">
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
+  <v-container max-width="960px" style="margin-bottom: 70px;">
     <div class="w-100 pa-12 background-banner rounded-xl mb-12">
       <v-row>
         <v-col sm="12" md="6">
@@ -99,6 +108,8 @@ import axios from "axios";
 export default {
   data() {
     return {
+      snackbar: false,
+      snackbarText: "",
       loading: false,
       cart: [],
       products: [],
@@ -127,6 +138,13 @@ export default {
         const id = response.data.data.id;
         this.$router.push({ path: "/orders/" + id });
       } catch (error) {
+        this.snackbarText = "Terjadi kesaslahan!";
+
+        setTimeout(function () {
+          this.snackbarText = "";
+        }, 5000);
+
+        this.snackbar = true;
       } finally {
         this.loading = false;
       }
@@ -146,6 +164,13 @@ export default {
 
         console.log(this.products);
       } catch (error) {
+        this.snackbarText = "Terjadi kesaslahan!";
+
+        setTimeout(function () {
+          this.snackbarText = "";
+        }, 5000);
+
+        this.snackbar = true;
       } finally {
         this.loading = false;
       }
