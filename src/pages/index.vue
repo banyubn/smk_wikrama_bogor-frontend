@@ -14,7 +14,7 @@
       <v-img class="mx-4" src="/src/assets/authentication_vector.png"> </v-img>
     </v-col>
     <v-col md="8" class="bg-white px-16 login-form">
-      <p class="text-h5 mb-12">
+      <p class="text-h5 mb-12 text-purple" style="line-height: 28px;">
         Makan <br />
         <span class="font-weight-bold"> Yuk </span>
       </p>

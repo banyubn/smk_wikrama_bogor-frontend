@@ -33,7 +33,27 @@
     <p class="text-h4 mb-8 font-weight-bold">
       Makanan Lezat Khas <span class="text-purple">Bogor</span>
     </p>
-    <v-row>
+    <v-row v-if="loading">
+      <v-col sm="12" md="6">
+        <v-skeleton-loader type="card"></v-skeleton-loader>
+      </v-col>
+      <v-col sm="12" md="6">
+        <v-skeleton-loader type="card"></v-skeleton-loader>
+      </v-col>
+      <v-col sm="12" md="6">
+        <v-skeleton-loader type="card"></v-skeleton-loader>
+      </v-col>
+      <v-col sm="12" md="6">
+        <v-skeleton-loader type="card"></v-skeleton-loader>
+      </v-col>
+      <v-col sm="12" md="6">
+        <v-skeleton-loader type="card"></v-skeleton-loader>
+      </v-col>
+      <v-col sm="12" md="6">
+        <v-skeleton-loader type="card"></v-skeleton-loader>
+      </v-col>
+    </v-row>
+    <v-row v-else>
       <v-col sm="12" md="6" v-for="product in filteredProduct">
         <v-card elevation="0">
           <v-img
@@ -242,6 +262,7 @@ export default {
 
 <style scoped>
 .popup-card {
+  z-index: 100;
   position: fixed;
   width: 100%;
   bottom: 0;

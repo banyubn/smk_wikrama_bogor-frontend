@@ -1,6 +1,6 @@
 <template>
   <Navbar />
-  <v-container max-width="960px">
+  <v-container max-width="960px" style="margin-bottom: 70px;">
     <v-btn color="purple" prepend-icon="mdi-arrow-left" class="mb-12" to="/home">Kembali</v-btn>
     <p class="text-h4 font-weight-bold mb-6">Riwayat <span class="text-purple">Pemesananmu</span></p>
     <v-table :loading="loading">
@@ -24,6 +24,9 @@
       </tbody>
     </v-table>
   </v-container>
+
+  <Footer />
+
 </template>
 
 <script>
