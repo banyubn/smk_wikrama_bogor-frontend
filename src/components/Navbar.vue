@@ -12,9 +12,15 @@
           <v-list>
             <v-list-item>
               <v-list-item-title>
-                <p>Nama</p>
-                <p class="text-subtitle-2">emailemail@gmail.com</p>
+                <p>{{ user.name }}</p>
+                <p class="text-subtitle-2">{{ user.email }}</p>
               </v-list-item-title>
+            </v-list-item>
+            <v-divider></v-divider>
+            <v-list-item>
+              <v-btn variant="plain" class="ma-0 pa-0 text-body-2" to="/history"
+                >Riwayat Pemesanan</v-btn
+              >
             </v-list-item>
             <v-list-item>
               <v-btn color="red" prepend-icon="mdi-logout" @click="logout"
@@ -29,13 +35,37 @@
 </template>
 
 <script>
+import { API_BASE_URL } from "@/constant";
+import axios from "axios";
+
 export default {
+  data() {
+    return {
+      user: [],
+    };
+  },
   methods: {
+    // Remove token from logged in user
     logout() {
       localStorage.removeItem("token");
 
       this.$router.push({ path: "/" });
     },
+    // Takes logged in user data
+    async getMe() {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.get(API_BASE_URL + "/users/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        this.user = response.data.data;
+      } catch (error) {}
+    },
+  },
+  mounted() {
+    this.getMe();
   },
 };
 </script>

@@ -2,8 +2,10 @@
   <!-- <v-text-field>
   </v-text-field> -->
   <v-row class="h-100">
-    <v-col md="3" class="bg-purple"></v-col>
-    <v-col md="9" class="bg-white px-16 login-form">
+    <v-col md="4" class="bg-purple d-flex">
+      <v-img class="mx-4" src="/src/assets/authentication_vector.png"> </v-img>
+    </v-col>
+    <v-col md="8" class="bg-white px-16 login-form">
       <p class="text-h5 mb-12">
         Makan <br />
         <span class="font-weight-bold"> Yuk </span>
@@ -11,6 +13,7 @@
       <p class="text-h4 font-weight-bold mb-6">Masuk untuk memulai!</p>
       <v-form @submit.prevent="submit">
         <v-text-field
+          :rules="[() => !!email || 'This field is required']"
           :loading="loading"
           variant="underlined"
           label="Email"
@@ -19,6 +22,7 @@
         >
         </v-text-field>
         <v-text-field
+          :rules="[() => !!password || 'This field is required']"
           :type="showPassword ? 'text' : 'password'"
           :loading="loading"
           :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye'"
@@ -57,7 +61,12 @@ export default {
     };
   },
   methods: {
+    // Submits login form
     async submit() {
+      const validate = this.$refs.form.validate();
+      if (validate) {
+        return;
+      }
       this.loading = true;
       try {
         const payload = {

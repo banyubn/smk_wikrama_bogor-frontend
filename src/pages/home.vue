@@ -1,6 +1,28 @@
 <template>
   <Navbar />
   <v-container max-width="960px">
+    <div class="w-100 pa-12 background-banner rounded-xl mb-12">
+      <v-row>
+        <v-col sm="12" md="6">
+          <p class="text-h4 text-white font-weight-bold">
+            Ayo, jajan makanan khas Bogor
+          </p>
+          <p class="text-body-2 my-2 text-white">#makanankhasbogor</p>
+          <v-text-field
+            prepend-inner-icon="mdi-magnify"
+            class="mt-6"
+            rounded="pill"
+            label="Cari produk ..."
+            variant="solo"
+            density="compact"
+          >
+          </v-text-field>
+        </v-col>
+      </v-row>
+    </div>
+    <p class="text-h4 mb-8 font-weight-bold">
+      Makanan Lezat Khas <span class="text-purple">Bogor</span>
+    </p>
     <v-row>
       <v-col sm="12" md="6" v-for="product in products">
         <v-card elevation="0">
@@ -8,7 +30,7 @@
             class="rounded-lg"
             height="250px"
             cover
-            src="/src/assets/lapis_talas.jpg"
+            :src="'http://127.0.0.1:8000/' + product.image"
           >
           </v-img>
           <v-card-title class="my-0">{{ product.name }}</v-card-title>
@@ -83,6 +105,7 @@ export default {
     };
   },
   methods: {
+    // Checkout products
     async checkout() {
       this.loading = true;
 
@@ -101,12 +124,14 @@ export default {
           }
         );
 
-        console.log(response.data);
-      } catch {
+        const id = response.data.data.id;
+        this.$router.push({ path: "/orders/" + id });
+      } catch (error) {
       } finally {
         this.loading = false;
       }
     },
+    // Get products from API
     async getProducts() {
       this.loading = true;
       const token = localStorage.getItem("token");
@@ -118,11 +143,14 @@ export default {
         });
 
         this.products = response.data.data;
+
+        console.log(this.products);
       } catch (error) {
       } finally {
         this.loading = false;
       }
     },
+    // Count how many product has been clicked
     productAmount(productId) {
       const productExists = this.cart.find(
         (item) => item.product_id === productId
@@ -130,6 +158,7 @@ export default {
 
       return productExists.quantity;
     },
+    // Check if product already exists
     checkProduct(productId) {
       const productExists = this.cart.find(
         (item) => item.product_id === productId
@@ -137,6 +166,7 @@ export default {
 
       return productExists?.quantity;
     },
+    // Decrease products from cart
     minProduct(productId) {
       const productExists = this.cart.find(
         (item) => item.product_id === productId
@@ -146,6 +176,7 @@ export default {
         productExists.quantity -= 1;
       }
     },
+    // Increase products from cart
     addProduct(productId) {
       const productExists = this.cart.find(
         (item) => item.product_id === productId
@@ -175,5 +206,9 @@ export default {
   width: 100%;
   bottom: 0;
   left: 0;
+}
+
+.background-banner {
+  background: url("/src/assets/doodle_background.png");
 }
 </style>
